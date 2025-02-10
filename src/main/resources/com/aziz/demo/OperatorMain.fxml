@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SplitMenuButton?>
@@ -21,6 +22,11 @@
                   <Font size="6.0" />
                </font>
             </Text>
+            <Button fx:id="registerButton" layoutX="15.0" layoutY="71.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Registr" />
+            <Button layoutX="15.0" layoutY="108.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Material" />
+            <Button fx:id="staffButton" layoutX="15.0" layoutY="145.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Staff" />
+            <Button fx:id="suppliersButton" layoutX="15.0" layoutY="182.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Suppliers" />
+            <Button fx:id="countryButton" layoutX="15.0" layoutY="217.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Country" />
          </children>
       </AnchorPane>
       <SplitMenuButton fx:id="sortButton" layoutX="506.0" layoutY="11.0" mnemonicParsing="false" text="Sort by">

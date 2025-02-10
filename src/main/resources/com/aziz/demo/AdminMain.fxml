@@ -4,6 +4,8 @@
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SplitMenuButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -17,18 +19,12 @@
                   <Font size="22.0" />
                </font>
             </Text>
-            <Text fill="WHITE" layoutX="47.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Таблицы" />
             <Text fill="WHITE" layoutX="14.0" layoutY="364.0" strokeType="OUTSIDE" strokeWidth="0.0" text="CRM система специально создана для компании блаблабла в целях управление системой" textAlignment="CENTER" wrappingWidth="113.41822052001953">
                <font>
                   <Font size="6.0" />
                </font>
             </Text>
-            <Button fx:id="usersButton" layoutX="13.0" layoutY="84.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Users" />
-            <Button fx:id="registerButton" layoutX="13.0" layoutY="121.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Registr" />
-            <Button layoutX="13.0" layoutY="158.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Material" />
-            <Button fx:id="staffButton" layoutX="13.0" layoutY="195.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Staff" />
-            <Button fx:id="suppliersButton" layoutX="13.0" layoutY="232.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Suppliers" />
-            <Button fx:id="countryButton" layoutX="13.0" layoutY="267.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Country" />
+            <Button fx:id="usersButton" layoutX="13.0" layoutY="58.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Users" />
          </children>
       </AnchorPane>
       <SplitMenuButton fx:id="sortButton" layoutX="506.0" layoutY="11.0" mnemonicParsing="false" text="Sort by">
@@ -45,5 +41,16 @@
             <MenuItem fx:id="exitAction" mnemonicParsing="false" text="Выйти из аккаунта" />
         </items>
       </MenuButton>
+       <TableView fx:id="usersTable" layoutX="168.0" layoutY="50.0" prefHeight="300.0" prefWidth="400.0">
+           <columns>
+               <TableColumn fx:id="idColumn" text="ID" />
+            <TableColumn fx:id="usernameColumn" text="username" />
+            <TableColumn fx:id="firstNameColumn" text="firstName" />
+            <TableColumn fx:id="lastNameColumn" text="lastName" />
+            <TableColumn fx:id="rolesColumn" text="roles" />
+           </columns>
+       </TableView>
+      <Button fx:id="deleteRowButton" layoutX="168.0" layoutY="360.0" mnemonicParsing="false" text="Удалить" />
+      <Button fx:id="updateRowButton" layoutX="239.0" layoutY="360.0" mnemonicParsing="false" text="Редактировать" />
    </children>
 </AnchorPane>

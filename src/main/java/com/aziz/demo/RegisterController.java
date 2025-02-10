@@ -115,9 +115,15 @@ public class RegisterController {
     }
 
     private void loadAppropriatePage() {
-        String path = checkboxAdmin.isSelected() ? "/com/aziz/demo/AdminMain.fxml" : "/com/aziz/demo/OperatorMain.fxml";
-        loaderPage(path);
+        if (Stage.getWindows().size() > 1) {
+            Stage currentStage = (Stage) registerButton.getScene().getWindow();
+            currentStage.close();
+        } else {
+            String path = checkboxAdmin.isSelected() ? "/com/aziz/demo/AdminMain.fxml" : "/com/aziz/demo/OperatorMain.fxml";
+            loaderPage(path);
+        }
     }
+
 
     private void registerUser(String username, String password, String firstName, String lastName) {
         String query = "INSERT INTO users (username, password, first_name, last_name, roles) VALUES (?, ?, ?, ?, ?)";

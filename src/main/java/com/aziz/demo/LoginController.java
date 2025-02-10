@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -51,24 +52,28 @@ public class LoginController {
             alertError("Заполните всю форму");
             return;
         }
-
-        if (loginUser(login, password)) {
+        String logined = loginUser(login, password);
+        if (logined.equals("Admin")) {
+            loaderPage("/com/aziz/demo/AdminMain.fxml");
+        }else if(logined.equals("Operator")){
             loaderPage("/com/aziz/demo/OperatorMain.fxml");
         }
     }
-
-    private boolean loginUser(String login, String password) {
-        String query = "SELECT password FROM users WHERE username = ?";
+    private String loginUser(String login, String password) {
+        String query = "SELECT password, roles FROM users WHERE username = ?";
 
         try (Connection dbConnection = DbConnection.connect_db();
              PreparedStatement prepared = dbConnection.prepareStatement(query)) {
 
             prepared.setString(1, login);
+
             try (ResultSet resultSet = prepared.executeQuery()) {
                 if (resultSet.next()) {
                     String storedHash = resultSet.getString("password");
+                    String role = resultSet.getString("roles");
+
                     if (BCrypt.checkpw(password, storedHash)) {
-                        return true;
+                        return role;
                     } else {
                         alertError("Неверный пароль");
                     }
@@ -80,8 +85,9 @@ public class LoginController {
             e.printStackTrace();
             alertError("Ошибка базы данных");
         }
-        return false;
+        return "Error";
     }
+
 
     private void alertError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -19,9 +19,6 @@ public class Staff {
         this.date_employment = date_employment;
     }
 
-    public static void setItems(ObservableList<Staff> data) {
-    }
-
     public String getID() {
         return ID.get();
     }

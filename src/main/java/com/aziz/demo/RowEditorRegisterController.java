@@ -40,6 +40,7 @@ public class RowEditorRegisterController {
     @FXML
     private TextField supplierField;
 
+    private RegisterMainController registerMainController;
 
     public static String id;
 
@@ -49,11 +50,15 @@ public class RowEditorRegisterController {
     }
 
     private void saveData() {
-        if (id != null){
+        if (id != null) {
             update();
         } else {
             insert();
         }
+    }
+
+    public void setRegisterMainController(RegisterMainController registerMainController) {
+        this.registerMainController = registerMainController;
     }
 
     private void insert() {
@@ -82,6 +87,7 @@ public class RowEditorRegisterController {
 
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
+                registerMainController.loadTableDataFromDB();
                 closeWindow();
             }
 
@@ -91,8 +97,7 @@ public class RowEditorRegisterController {
         }
     }
 
-
-    private void update(){
+    private void update() {
         String query = "UPDATE register SET name = ?, article = ?, supplier = ?, material = ?, sales = ? WHERE id = ?";
 
         try (Connection dbConnection = DbConnection.connect_db();
@@ -119,7 +124,8 @@ public class RowEditorRegisterController {
             int rowsUpdated = prepared.executeUpdate();
 
             if (rowsUpdated > 0) {
-                alertSuccess("Данные успешно обновлены!, обновите таблицу");
+                alertSuccess("Данные успешно обновлены!");
+                registerMainController.loadTableDataFromDB();
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");
@@ -142,7 +148,8 @@ public class RowEditorRegisterController {
             supplierField.setText(String.valueOf(registerData.getSupplier()));
         }
     }
-    private void closeWindow(){
+
+    private void closeWindow() {
         Stage stage = (Stage) nameField.getScene().getWindow();
         stage.close();
     }
@@ -154,6 +161,7 @@ public class RowEditorRegisterController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
     private void alertError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Ошибка");
@@ -161,13 +169,12 @@ public class RowEditorRegisterController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    private void alertSuccess(String message){
+
+    private void alertSuccess(String message) {
         Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
         successAlert.setTitle("Успех");
         successAlert.setHeaderText(null);
         successAlert.setContentText(message);
         successAlert.showAndWait();
     }
-
-
 }

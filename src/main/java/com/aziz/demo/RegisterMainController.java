@@ -160,12 +160,16 @@ public class RegisterMainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent root = loader.load();
 
-           if (isEditRegister){
-               RowEditorRegisterController controller = loader.getController();
-               if (controller != null && selectedRow != null) {
-                   controller.setRegisterData(selectedRow);
-               }
-           }
+            if (isEditRegister) {
+                RowEditorRegisterController controller = loader.getController();
+                if (controller != null && selectedRow != null) {
+                    controller.setRegisterData(selectedRow);
+                    controller.setRegisterMainController(this); // Передача текущего контроллера
+                }
+            } else {
+                RowEditorRegisterController controller = loader.getController();
+                controller.setRegisterMainController(this);
+            }
 
             Stage newStage = new Stage();
             newStage.setScene(new Scene(root));
@@ -175,6 +179,7 @@ public class RegisterMainController {
             alertError("Ошибка загрузки страницы");
         }
     }
+
 
 
     private void alertSuccess(String message){

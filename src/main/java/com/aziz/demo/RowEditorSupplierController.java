@@ -70,6 +70,7 @@ public class RowEditorSupplierController {
             prepared.setString(2, country);
 
             int rowsInserted = prepared.executeUpdate();
+            id = null;
 
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
@@ -103,6 +104,7 @@ public class RowEditorSupplierController {
             prepared.setInt(3, Integer.parseInt(id));
 
             int rowsUpdated = prepared.executeUpdate();
+            id = null;
 
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");

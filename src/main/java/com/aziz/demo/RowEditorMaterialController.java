@@ -11,7 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class RowEditorCountryController {
+public class RowEditorMaterialController {
 
     @FXML
     private ResourceBundle resources;
@@ -23,12 +23,12 @@ public class RowEditorCountryController {
     private Button cancelButton;
 
     @FXML
-    private TextField countryField;
+    private TextField materialField;
 
     @FXML
     private Button saveButton;
 
-    private CountryMainController countryMainController;
+    private MaterialMainController materialMainController;
 
     public static String id;
 
@@ -45,30 +45,30 @@ public class RowEditorCountryController {
         }
     }
 
-    public void setCountryMainController(CountryMainController countryMainController) {
-        this.countryMainController = countryMainController;
+    public void setMaterialMainController(MaterialMainController materialMainController) {
+        this.materialMainController = materialMainController;
     }
 
     private void insert() {
-        String query = "INSERT INTO country (country) VALUES (?)";
+        String query = "INSERT INTO material (name) VALUES (?)";
         try (Connection dbConnection = DbConnection.connect_db();
              PreparedStatement prepared = dbConnection.prepareStatement(query)) {
 
-            String country = countryField.getText().trim();
+            String material = materialField.getText().trim();
 
-            if (country.isEmpty()) {
-                alertInfo("Поле 'country' не может быть пустым!");
+            if (material.isEmpty()) {
+                alertInfo("Поле 'name' не может быть пустым!");
                 return;
             }
 
-            prepared.setString(1, country);
+            prepared.setString(1, material);
 
             int rowsInserted = prepared.executeUpdate();
             id = null;
 
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
-                countryMainController.loadTableDataFromDB();
+                materialMainController.loadTableDataFromDB();
                 closeWindow();
             }
 
@@ -80,19 +80,19 @@ public class RowEditorCountryController {
 
 
     private void update() {
-        String query = "UPDATE country SET country = ? WHERE id = ?";
+        String query = "UPDATE material SET name = ? WHERE id = ?";
 
         try (Connection dbConnection = DbConnection.connect_db();
              PreparedStatement prepared = dbConnection.prepareStatement(query)) {
 
-            String country = countryField.getText().trim();
+            String material = materialField.getText().trim();
 
-            if (country.isEmpty()) {
-                alertInfo("Поле 'country' не может быть пустым!");
+            if (material.isEmpty()) {
+                alertInfo("Поле 'material' не может быть пустым!");
                 return;
             }
 
-            prepared.setString(1, country);
+            prepared.setString(1, material);
             prepared.setInt(2, Integer.parseInt(id));
 
             int rowsUpdated = prepared.executeUpdate();
@@ -100,7 +100,7 @@ public class RowEditorCountryController {
 
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");
-                countryMainController.loadTableDataFromDB();
+                materialMainController.loadTableDataFromDB();
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");
@@ -114,7 +114,7 @@ public class RowEditorCountryController {
     }
 
     private void closeWindow() {
-        Stage stage = (Stage) countryField.getScene().getWindow();
+        Stage stage = (Stage) materialField.getScene().getWindow();
         stage.close();
     }
 
@@ -142,10 +142,10 @@ public class RowEditorCountryController {
         successAlert.showAndWait();
     }
 
-    public void setCountryData(Country countryData) {
-        if (countryData != null) {
-            this.id = countryData.getID();
-            countryField.setText(countryData.getCountry());
+    public void setMaterialData(Material materialData) {
+        if (materialData != null) {
+            this.id = materialData.getID();
+            materialField.setText(materialData.getName());
         }
     }
 

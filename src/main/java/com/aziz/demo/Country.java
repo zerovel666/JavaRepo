@@ -1,10 +1,6 @@
 package com.aziz.demo;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Country {
     private final SimpleStringProperty ID;

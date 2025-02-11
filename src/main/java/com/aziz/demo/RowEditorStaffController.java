@@ -81,6 +81,7 @@ public class RowEditorStaffController {
             prepared.setDate(2, date_employement);
 
             int rowsInserted = prepared.executeUpdate();
+            id = null;
 
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
@@ -123,6 +124,7 @@ public class RowEditorStaffController {
             prepared.setInt(3, Integer.parseInt(id));
 
             int rowsUpdated = prepared.executeUpdate();
+            id = null;
 
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");

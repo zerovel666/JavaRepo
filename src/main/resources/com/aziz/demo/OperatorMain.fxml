@@ -41,9 +41,5 @@
             <MenuItem fx:id="exitAction" mnemonicParsing="false" text="Выйти из аккаунта" />
          </items>
       </MenuButton>
-      <TableView fx:id="operatorTable" layoutX="163.0" layoutY="54.0" prefHeight="297.0" prefWidth="420.0" />
-      <Button fx:id="deleteRowButton" layoutX="163.0" layoutY="364.0" mnemonicParsing="false" text="Удалить" />
-      <Button fx:id="updateRowButton" layoutX="234.0" layoutY="364.0" mnemonicParsing="false" text="Редактировать" />
-      <Button fx:id="createButton" cache="true" layoutX="470.0" layoutY="12.0" mnemonicParsing="false" style="-fx-background-radius: 360;" text="+" />
    </children>
 </AnchorPane>

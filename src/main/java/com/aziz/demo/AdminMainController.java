@@ -45,7 +45,23 @@ public class AdminMainController {
     private MenuItem renderUserAction;
 
     @FXML
+    private Button countryButton;
+
+
+    @FXML
+    private Button materialButton;
+
+    @FXML
+    private Button registerButton;
+
+    @FXML
     private SplitMenuButton sortButton;
+
+    @FXML
+    private Button staffButton;
+
+    @FXML
+    private Button suppliersButton;
 
     @FXML
     private TableColumn<User, String> firstNameColumn;

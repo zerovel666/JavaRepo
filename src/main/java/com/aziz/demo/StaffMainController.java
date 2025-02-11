@@ -6,10 +6,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.ResourceBundle;
 
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class RegisterMainController {
+public class StaffMainController {
 
     @FXML
     private ResourceBundle resources;
@@ -29,7 +28,7 @@ public class RegisterMainController {
     private URL location;
 
     @FXML
-    private TableView<Register> RegisterTable;
+    private TableView<Staff> staffTable;
 
     @FXML
     private Button countryButton;
@@ -50,25 +49,10 @@ public class RegisterMainController {
     private MenuButton menuButton;
 
     @FXML
-    private TableColumn<Register, Long> registerArticle;
-
-    @FXML
     private Button registerButton;
 
     @FXML
-    private TableColumn<Register, String> registerID;
-
-    @FXML
-    private TableColumn<Register, Integer> registerMaterial;
-
-    @FXML
-    private TableColumn<Register, String> registerName;
-
-    @FXML
-    private TableColumn<Register, Integer> registerSales;
-
-    @FXML
-    private TableColumn<Register, Integer> registerSupplier;
+    private TableColumn<Staff, String> staffID;
 
     @FXML
     private SplitMenuButton sortButton;
@@ -77,12 +61,18 @@ public class RegisterMainController {
     private Button staffButton;
 
     @FXML
+    private TableColumn<Staff, String> staffDateEmployement;
+
+    @FXML
+    private TableColumn<Staff, String> staffFullName;
+
+    @FXML
     private Button suppliersButton;
 
     @FXML
     private Button updateRowButton;
 
-    private Register selectedRow;
+    private Staff selectedRow;
 
     @FXML
     void initialize() {
@@ -90,30 +80,30 @@ public class RegisterMainController {
         loadTableDataFromDB();
         deleteRowButton.setDisable(true);
         updateRowButton.setDisable(true);
-        RegisterTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+        staffTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             selectedRow = newSelection;
             deleteRowButton.setDisable(newSelection == null);
             updateRowButton.setDisable(newSelection == null);
         });
         deleteRowButton.setOnAction(event -> deleteData());
         registerButton.setOnAction(event -> loadTableDataFromDB());
-        updateRowButton.setOnAction(event -> loaderPage("/com/aziz/demo/RowEditorRegister.fxml", false, true));
-        createButton.setOnAction(actionEvent -> loaderPage("/com/aziz/demo/RowEditorRegister.fxml",false,false));
+        updateRowButton.setOnAction(event -> loaderPage("/com/aziz/demo/RowEditorStaff.fxml", false, true));
+        createButton.setOnAction(actionEvent -> loaderPage("/com/aziz/demo/RowEditorStaff.fxml",false,false));
     }
 
     private void setupTableColumns() {
-        registerID.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getID()));
-        registerName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
-        registerArticle.setCellValueFactory(cellData -> new SimpleLongProperty(cellData.getValue().getArticle()).asObject());
-        registerMaterial.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getMaterial()).asObject());
-        registerSales.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getSales()).asObject());
-        registerSupplier.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getSupplier()).asObject());
+        staffID.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getID()));
+        staffFullName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFull_name()));
+
+        staffDateEmployement.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getDateEmploymentFormatted())
+        );
     }
 
     private void deleteData() {
-        String query = "DELETE FROM register WHERE id = ?";
+        String query = "DELETE FROM Staff WHERE id = ?";
         try (Connection dbConnection = DbConnection.connect_db();
-        PreparedStatement prepared = dbConnection.prepareStatement(query)) {
+             PreparedStatement prepared = dbConnection.prepareStatement(query)) {
             String id = selectedRow.getID();
             prepared.setLong(1,Long.parseLong(id));
             prepared.execute();
@@ -125,9 +115,9 @@ public class RegisterMainController {
 
 
     public void loadTableDataFromDB() {
-        ObservableList<Register> data = FXCollections.observableArrayList();
+        ObservableList<Staff> data = FXCollections.observableArrayList();
 
-        String query = "SELECT id, name, article, material, sales, supplier FROM register";
+        String query = "SELECT id, full_name, date_employement FROM staff";
 
         try (Connection dbConnection = DbConnection.connect_db();
              PreparedStatement prepared = dbConnection.prepareStatement(query);
@@ -135,22 +125,19 @@ public class RegisterMainController {
 
             while (resultSet.next()) {
                 String id = resultSet.getString("id");
-                String name = resultSet.getString("name");
-                long article = resultSet.getLong("article");
-                int material = resultSet.getInt("material");
-                int sales = resultSet.getInt("sales");
-                int supplier = resultSet.getInt("supplier");
+                String full_name = resultSet.getString("full_name");
+                Date date_employement = resultSet.getDate("date_employement");
 
-                data.add(new Register(id, name, article, material, sales, supplier));
+                data.add(new Staff(id, full_name,date_employement));
             }
 
-            RegisterTable.setItems(data);
+            staffTable.setItems(data);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    private void loaderPage(String path, Boolean close, Boolean isEditRegister) {
+    private void loaderPage(String path, Boolean close, Boolean isEditStaff) {
         try {
             if (close) {
                 Stage stage = (Stage) sortButton.getScene().getWindow();
@@ -160,15 +147,15 @@ public class RegisterMainController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent root = loader.load();
 
-            if (isEditRegister) {
-                RowEditorRegisterController controller = loader.getController();
+            if (isEditStaff) {
+                RowEditorStaffController controller = loader.getController();
                 if (controller != null && selectedRow != null) {
-                    controller.setRegisterData(selectedRow);
-                    controller.setRegisterMainController(this); // Передача текущего контроллера
+                    controller.setStaffData(selectedRow);
+                    controller.setStaffMainController(this); // Передача текущего контроллера
                 }
             } else {
-                RowEditorRegisterController controller = loader.getController();
-                controller.setRegisterMainController(this);
+                RowEditorStaffController controller = loader.getController();
+                controller.setStaffMainController(this);
             }
 
             Stage newStage = new Stage();
@@ -197,4 +184,5 @@ public class RegisterMainController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
 }

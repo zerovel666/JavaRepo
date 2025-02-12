@@ -37,14 +37,15 @@
             <MenuItem fx:id="exitAction" mnemonicParsing="false" text="Выйти из аккаунта" />
          </items>
       </MenuButton>
-      <Button fx:id="updateRowButton" layoutX="163.0" layoutY="360.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Обновить" />
-      <LineChart layoutX="162.0" layoutY="46.0" prefHeight="308.0" prefWidth="421.0">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="LEFT" upperBound="10.0" />
-        </yAxis>
+      <Button fx:id="updateCharButton" layoutX="163.0" layoutY="360.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Обновить" />
+      <LineChart fx:id="lineChart" layoutX="162.0" layoutY="46.0" prefHeight="308.0" prefWidth="421.0">
+         <xAxis>
+            <CategoryAxis side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis side="LEFT" fx:id="yAxis" />
+         </yAxis>
       </LineChart>
+
    </children>
 </AnchorPane>

@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -41,6 +42,9 @@ public class AnalyticsController {
 
     @FXML
     public MenuItem filterItemByCreatedAt;
+
+    @FXML
+    public MenuItem filterByBestSelling;
 
     @FXML
     private ResourceBundle resources;
@@ -97,12 +101,13 @@ public class AnalyticsController {
             }
         });
         filterItemByCreatedAt.setOnAction(event -> getFilterByCreatedAt());
+        filterByBestSelling.setOnAction(event -> getFilterByBestSelling());
 
     }
 
     private void getFilterByCreatedAt() {
         lastFilterMethod = this::getFilterByCreatedAt;
-        Map<LocalDate, Integer> dataMap = new LinkedHashMap<>(); // Используем LinkedHashMap для сохранения порядка
+        Map<LocalDate, Integer> dataMap = new LinkedHashMap<>();
 
         String query = "SELECT DATE(time) AS date, COUNT(*) AS count FROM register GROUP BY date ORDER BY date";
 
@@ -119,7 +124,7 @@ public class AnalyticsController {
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName("Analytics register table");
 
-            ObservableList<String> categories = FXCollections.observableArrayList(); // Категории для оси X
+            ObservableList<String> categories = FXCollections.observableArrayList();
 
             for (Map.Entry<LocalDate, Integer> entry : dataMap.entrySet()) {
                 String dateStr = entry.getKey().toString();
@@ -127,12 +132,10 @@ public class AnalyticsController {
                 categories.add(dateStr);
             }
 
-            // Очищаем график перед добавлением новых данных
             lineChart.getData().clear();
             lineChart.layout();
             lineChart.getData().add(series);
 
-            // Настройка оси Y
             int maxValue = dataMap.values().stream().max(Integer::compare).orElse(50);
             yAxis.setTickUnit(1);
             yAxis.setMinorTickCount(0);
@@ -141,7 +144,6 @@ public class AnalyticsController {
             yAxis.setLowerBound(0);
             yAxis.setUpperBound(maxValue + 5);
 
-            // Настройка оси X (категории дат)
             CategoryAxis xAxis = (CategoryAxis) lineChart.getXAxis();
             xAxis.setCategories(categories);
             xAxis.setTickLabelRotation(45);
@@ -151,6 +153,47 @@ public class AnalyticsController {
             e.printStackTrace();
         }
     }
+
+    private void getFilterByBestSelling() {
+        lastFilterMethod = this::getFilterByBestSelling;
+        Map<String, Integer> dataMap = new HashMap<>();
+
+        String query = "SELECT name, SUM(sold) AS total_sold FROM register GROUP BY name ORDER BY total_sold DESC";
+
+        try (Connection dbConnection = DbConnection.connect_db();
+             PreparedStatement prepared = dbConnection.prepareStatement(query);
+             ResultSet resultSet = prepared.executeQuery()) {
+
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                int sold = resultSet.getInt("total_sold");
+                dataMap.put(name, sold);
+            }
+
+            // Очищаем график и оси перед обновлением
+            lineChart.getData().clear();
+            xAxis.setCategories(FXCollections.observableArrayList()); // Полностью очищаем X-ось
+            yAxis.setAutoRanging(true);
+
+            XYChart.Series<String, Number> series = new XYChart.Series<>();
+            series.setName("Top Sold Products");
+
+            ObservableList<String> categories = FXCollections.observableArrayList();
+            for (Map.Entry<String, Integer> entry : dataMap.entrySet()) {
+                series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
+                categories.add(entry.getKey());
+            }
+
+            Platform.runLater(() -> {
+                xAxis.setCategories(categories);
+                lineChart.getData().add(series);
+            });
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     private void loaderPage(String path) {

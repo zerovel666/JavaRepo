@@ -52,5 +52,6 @@
       <Button fx:id="deleteRowButton" layoutX="163.0" layoutY="364.0" mnemonicParsing="false" text="Удалить" />
       <Button fx:id="updateRowButton" layoutX="234.0" layoutY="364.0" mnemonicParsing="false" text="Редактировать" />
       <Button fx:id="createButton" cache="true" layoutX="470.0" layoutY="12.0" mnemonicParsing="false" style="-fx-background-radius: 360;" text="+" />
+      <Button fx:id="analyticsButton" layoutX="15.0" layoutY="252.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Analitics" />
    </children>
 </AnchorPane>

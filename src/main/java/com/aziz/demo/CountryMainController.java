@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 
 public class CountryMainController {
 
+    public Button analyticsButton;
     @FXML
     private ResourceBundle resources;
 
@@ -90,6 +91,7 @@ public class CountryMainController {
         staffButton.setOnAction(event->loaderPage("/com/aziz/demo/StaffMain.fxml",true,false,false));
         registerButton.setOnAction(event->loaderPage("/com/aziz/demo/RegisterMain.fxml",true,false,false));
         materialButton.setOnAction(event->loaderPage("/com/aziz/demo/MaterialMain.fxml",true,false,false));
+        analyticsButton.setOnAction(event -> loaderPage("/com/aziz/demo/ChartAnalytics.fxml",true,false,false));
     }
 
     private void setupTableColumns() {

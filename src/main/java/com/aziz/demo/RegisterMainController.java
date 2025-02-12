@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 
 public class RegisterMainController {
 
+    public Button analyticsButton;
     @FXML
     private ResourceBundle resources;
 
@@ -104,6 +105,8 @@ public class RegisterMainController {
         staffButton.setOnAction(event->loaderPage("/com/aziz/demo/StaffMain.fxml",true,false,false));
         registerButton.setDisable(true);
         materialButton.setOnAction(event->loaderPage("/com/aziz/demo/MaterialMain.fxml",true,false,false));
+        analyticsButton.setOnAction(event -> loaderPage("/com/aziz/demo/ChartAnalytics.fxml",true,false,false));
+
     }
 
     private void setupTableColumns() {

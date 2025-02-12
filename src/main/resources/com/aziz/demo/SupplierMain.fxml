@@ -45,7 +45,7 @@
       <TableView fx:id="supplierTable" layoutX="163.0" layoutY="54.0" prefHeight="297.0" prefWidth="420.0">
          <columns>
             <TableColumn fx:id="supplierID" prefWidth="75.0" text="ID" />
-            <TableColumn fx:id="suppplierSupplier" prefWidth="157.5999755859375" text="supplier" />
+            <TableColumn fx:id="supplierSupplier" prefWidth="157.5999755859375" text="supplier" />
             <TableColumn fx:id="supplierCountry" prefWidth="186.4000244140625" text="country" />
          </columns>
       </TableView>

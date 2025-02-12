@@ -22,6 +22,9 @@ import javafx.stage.Stage;
 public class SupplierMainController {
 
     @FXML
+    public Button staffButton;
+
+    @FXML
     private ResourceBundle resources;
 
     @FXML
@@ -67,7 +70,7 @@ public class SupplierMainController {
     private Button suppliersButton;
 
     @FXML
-    private TableColumn<Supplier,String> suppplierSupplier;
+    private TableColumn<Supplier,String> supplierSupplier;
 
     @FXML
     private Button updateRowButton;
@@ -87,13 +90,20 @@ public class SupplierMainController {
         });
         deleteRowButton.setOnAction(event -> deleteData());
         registerButton.setOnAction(event -> loadTableDataFromDB());
-        updateRowButton.setOnAction(event -> loaderPage("/com/aziz/demo/RowEditorsupplier.fxml", false, true));
-        createButton.setOnAction(actionEvent -> loaderPage("/com/aziz/demo/RowEditorsupplier.fxml",false,false));
+        updateRowButton.setOnAction(event -> loaderPage("/com/aziz/demo/RowEditorSupplier.fxml", false, true,false));
+        createButton.setOnAction(actionEvent -> loaderPage("/com/aziz/demo/RowEditorSupplier.fxml",false,false,true));
+
+        countryButton.setOnAction(event -> loaderPage("/com/aziz/demo/CountryMain.fxml",true,false,false));
+        suppliersButton.setDisable(true);
+        staffButton.setOnAction(event->loaderPage("/com/aziz/demo/StaffMain.fxml",true,false,false));
+        registerButton.setOnAction(event->loaderPage("/com/aziz/demo/RegisterMain.fxml",true,false,false));
+        materialButton.setOnAction(event->loaderPage("/com/aziz/demo/Material.fxml",true,false,false));
+
     }
 
     private void setupTableColumns() {
         supplierID.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getID()));
-        suppplierSupplier.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSupplier()));
+        supplierSupplier.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSupplier()));
         supplierCountry.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCountry())); // Добавьте это
     }
 
@@ -134,7 +144,7 @@ public class SupplierMainController {
             e.printStackTrace();
         }
     }
-    private void loaderPage(String path, Boolean close, Boolean isEditSupplier) {
+    private void loaderPage(String path, Boolean close, Boolean isEditSupplier, Boolean isCreate) {
         try {
             if (close) {
                 Stage stage = (Stage) sortButton.getScene().getWindow();
@@ -150,7 +160,7 @@ public class SupplierMainController {
                     controller.setSupplierData(selectedRow);
                     controller.setSupplierMainController(this); // Передача текущего контроллера
                 }
-            } else {
+            } else if (isCreate){
                 RowEditorSupplierController controller = loader.getController();
                 controller.setSupplierMainController(this);
             }

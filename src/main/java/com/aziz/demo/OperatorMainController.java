@@ -61,6 +61,11 @@ public class OperatorMainController {
     @FXML
     void initialize() {
         registerButton.setOnAction(event->loaderPage("/com/aziz/demo/RegisterMain.fxml"));
+        countryButton.setOnAction(event -> loaderPage("/com/aziz/demo/CountryMain.fxml"));
+        suppliersButton.setOnAction(event -> loaderPage("/com/aziz/demo/SupplierMain.fxml"));
+        staffButton.setOnAction(event->loaderPage("/com/aziz/demo/StaffMain.fxml"));
+        registerButton.setOnAction(event->loaderPage("/com/aziz/demo/RegisterMain.fxml"));
+        materialButton.setOnAction(event->loaderPage("/com/aziz/demo/MaterialMain.fxml"));
     }
 
     private void alertError(String message) {

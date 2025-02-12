@@ -83,8 +83,13 @@ public class CountryMainController {
         });
         deleteRowButton.setOnAction(event -> deleteData());
         registerButton.setOnAction(event -> loadTableDataFromDB());
-        updateRowButton.setOnAction(event -> loaderPage("/com/aziz/demo/RowEditorCountry.fxml", false, true));
-        createButton.setOnAction(actionEvent -> loaderPage("/com/aziz/demo/RowEditorCountry.fxml",false,false));
+        updateRowButton.setOnAction(event -> loaderPage("/com/aziz/demo/RowEditorCountry.fxml", false, true,false));
+        createButton.setOnAction(actionEvent -> loaderPage("/com/aziz/demo/RowEditorCountry.fxml",false,false,true));
+        countryButton.setDisable(true);
+        suppliersButton.setOnAction(event->loaderPage("/com/aziz/demo/SupplierMain.fxml",true,false,false));
+        staffButton.setOnAction(event->loaderPage("/com/aziz/demo/StaffMain.fxml",true,false,false));
+        registerButton.setOnAction(event->loaderPage("/com/aziz/demo/RegisterMain.fxml",true,false,false));
+        materialButton.setOnAction(event->loaderPage("/com/aziz/demo/MaterialMain.fxml",true,false,false));
     }
 
     private void setupTableColumns() {
@@ -128,7 +133,7 @@ public class CountryMainController {
             e.printStackTrace();
         }
     }
-    private void loaderPage(String path, Boolean close, Boolean isEditCountry) {
+    private void loaderPage(String path, Boolean close, Boolean isEditCountry, Boolean isCreate) {
         try {
             if (close) {
                 Stage stage = (Stage) sortButton.getScene().getWindow();
@@ -144,7 +149,7 @@ public class CountryMainController {
                     controller.setCountryData(selectedRow);
                     controller.setCountryMainController(this);
                 }
-            } else {
+            } else if(isCreate){
                 RowEditorCountryController controller = loader.getController();
                 controller.setCountryMainController(this);
             }

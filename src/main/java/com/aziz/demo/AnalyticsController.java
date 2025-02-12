@@ -8,12 +8,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -30,6 +35,12 @@ public class AnalyticsController {
 
     @FXML
     public Button updateCharButton;
+
+    @FXML
+    public MenuButton changeFilterMenu;
+
+    @FXML
+    public MenuItem filterItemByCreatedAt;
 
     @FXML
     private ResourceBundle resources;
@@ -68,6 +79,11 @@ public class AnalyticsController {
     private NumberAxis yAxis;
 
     @FXML
+    private CategoryAxis xAxis;
+
+    private Runnable lastFilterMethod;
+
+    @FXML
     void initialize() {
         countryButton.setOnAction(event -> loaderPage("/com/aziz/demo/CountryMain.fxml"));
         suppliersButton.setOnAction(event->loaderPage("/com/aziz/demo/SupplierMain.fxml"));
@@ -75,18 +91,25 @@ public class AnalyticsController {
         registerButton.setOnAction(event->loaderPage("/com/aziz/demo/RegisterMain.fxml"));
         materialButton.setOnAction(event->loaderPage("/com/aziz/demo/Material.fxml"));
         analyticsButton.setDisable(true);
-        updateCharButton.setOnAction(event -> loadChartData());
-        loadChartData();
+        updateCharButton.setOnAction(event -> {
+            if (lastFilterMethod != null){
+                lastFilterMethod.run();
+            }
+        });
+        filterItemByCreatedAt.setOnAction(event -> getFilterByCreatedAt());
+
     }
 
-    private void loadChartData() {
-        Map<LocalDate, Integer> dataMap = new HashMap<>();
+    private void getFilterByCreatedAt() {
+        lastFilterMethod = this::getFilterByCreatedAt;
+        Map<LocalDate, Integer> dataMap = new LinkedHashMap<>(); // Используем LinkedHashMap для сохранения порядка
 
         String query = "SELECT DATE(time) AS date, COUNT(*) AS count FROM register GROUP BY date ORDER BY date";
 
         try (Connection dbConnection = DbConnection.connect_db();
              PreparedStatement prepared = dbConnection.prepareStatement(query);
              ResultSet resultSet = prepared.executeQuery()) {
+
             while (resultSet.next()) {
                 LocalDate date = resultSet.getDate("date").toLocalDate();
                 int count = resultSet.getInt("count");
@@ -95,24 +118,41 @@ public class AnalyticsController {
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName("Analytics register table");
-            for (Map.Entry<LocalDate, Integer> entry : dataMap.entrySet()) {
-                series.getData().add(new XYChart.Data<>(entry.getKey().toString(), entry.getValue()));
-            }
-            yAxis.setTickUnit(1);               // Шаг оси - 1
-            yAxis.setMinorTickCount(0);         // Убираем промежуточные деления
-            yAxis.setForceZeroInRange(true);    // Ось Y начинается с 0
-            yAxis.setAutoRanging(false);        // Отключаем авторасчёт диапазона
-            yAxis.setLowerBound(0);             // Нижняя граница - 0
-            int maxValue = dataMap.values().stream().max(Integer::compare).orElse(50);
-            yAxis.setUpperBound(maxValue+5);
 
+            ObservableList<String> categories = FXCollections.observableArrayList(); // Категории для оси X
+
+            for (Map.Entry<LocalDate, Integer> entry : dataMap.entrySet()) {
+                String dateStr = entry.getKey().toString();
+                series.getData().add(new XYChart.Data<>(dateStr, entry.getValue()));
+                categories.add(dateStr);
+            }
+
+            // Очищаем график перед добавлением новых данных
             lineChart.getData().clear();
+            lineChart.layout();
             lineChart.getData().add(series);
+
+            // Настройка оси Y
+            int maxValue = dataMap.values().stream().max(Integer::compare).orElse(50);
+            yAxis.setTickUnit(1);
+            yAxis.setMinorTickCount(0);
+            yAxis.setForceZeroInRange(true);
+            yAxis.setAutoRanging(false);
+            yAxis.setLowerBound(0);
+            yAxis.setUpperBound(maxValue + 5);
+
+            // Настройка оси X (категории дат)
+            CategoryAxis xAxis = (CategoryAxis) lineChart.getXAxis();
+            xAxis.setCategories(categories);
+            xAxis.setTickLabelRotation(45);
+            xAxis.setTickLabelGap(10);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
     private void loaderPage(String path) {
         try {
             Stage stage = (Stage) countryButton.getScene().getWindow();
@@ -137,3 +177,5 @@ public class AnalyticsController {
 
 
 }
+
+

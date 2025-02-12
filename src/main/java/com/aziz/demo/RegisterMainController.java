@@ -22,7 +22,15 @@ import javafx.stage.Stage;
 
 public class RegisterMainController {
 
+    @FXML
     public Button analyticsButton;
+
+    @FXML
+    public TableColumn<Register,Integer> registerCountHave;
+
+    @FXML
+    public TableColumn<Register,Integer> registerSold;
+
     @FXML
     private ResourceBundle resources;
 
@@ -116,6 +124,8 @@ public class RegisterMainController {
         registerMaterial.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getMaterial()).asObject());
         registerSales.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getSales()).asObject());
         registerSupplier.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getSupplier()).asObject());
+        registerCountHave.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getcount_have()).asObject());
+        registerSold.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getSold()).asObject());
     }
 
     private void deleteData() {
@@ -135,7 +145,7 @@ public class RegisterMainController {
     public void loadTableDataFromDB() {
         ObservableList<Register> data = FXCollections.observableArrayList();
 
-        String query = "SELECT id, name, article, material, sales, supplier FROM register";
+        String query = "SELECT id, name, article, material, sales, supplier, count_have, sold FROM register";
 
         try (Connection dbConnection = DbConnection.connect_db();
              PreparedStatement prepared = dbConnection.prepareStatement(query);
@@ -148,8 +158,10 @@ public class RegisterMainController {
                 int material = resultSet.getInt("material");
                 int sales = resultSet.getInt("sales");
                 int supplier = resultSet.getInt("supplier");
+                int count_have = resultSet.getInt("count_have");
+                int sold = resultSet.getInt("sold");
 
-                data.add(new Register(id, name, article, material, sales, supplier));
+                data.add(new Register(id, name, article, material, sales, supplier, count_have, sold));
             }
 
             RegisterTable.setItems(data);

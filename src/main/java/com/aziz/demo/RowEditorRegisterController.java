@@ -14,6 +14,12 @@ import javafx.stage.Stage;
 public class RowEditorRegisterController {
 
     @FXML
+    public TextField count_haveField;
+
+    @FXML
+    public TextField soldField;
+
+    @FXML
     private ResourceBundle resources;
 
     @FXML
@@ -62,7 +68,7 @@ public class RowEditorRegisterController {
     }
 
     private void insert() {
-        String query = "INSERT INTO register (name, article, supplier, material, sales) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO register (name, article, supplier, material, sales, count_have, sold) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection dbConnection = DbConnection.connect_db();
              PreparedStatement prepared = dbConnection.prepareStatement(query)) {
 
@@ -71,6 +77,8 @@ public class RowEditorRegisterController {
             Integer supplier = Integer.valueOf(supplierField.getText().trim());
             Integer material = Integer.valueOf(materialField.getText().trim());
             Integer sales = Integer.valueOf(salesField.getText().trim());
+            Integer count_have = Integer.valueOf(count_haveField.getText().trim());
+            Integer sold = Integer.valueOf(soldField.getText().trim());
 
             if (name.isEmpty()) {
                 alertInfo("Поле 'name' не может быть пустым!");
@@ -82,6 +90,8 @@ public class RowEditorRegisterController {
             prepared.setInt(3, supplier);
             prepared.setInt(4, material);
             prepared.setInt(5, sales);
+            prepared.setInt(6,count_have);
+            prepared.setInt(7,sold);
 
             int rowsInserted = prepared.executeUpdate();
 
@@ -98,7 +108,7 @@ public class RowEditorRegisterController {
     }
 
     private void update() {
-        String query = "UPDATE register SET name = ?, article = ?, supplier = ?, material = ?, sales = ? WHERE id = ?";
+        String query = "UPDATE register SET name = ?, article = ?, supplier = ?, material = ?, sales = ?, count_have = ?, count_have = ? WHERE id = ?";
 
         try (Connection dbConnection = DbConnection.connect_db();
              PreparedStatement prepared = dbConnection.prepareStatement(query)) {
@@ -108,6 +118,8 @@ public class RowEditorRegisterController {
             Integer supplier = Integer.valueOf(supplierField.getText().trim());
             Integer material = Integer.valueOf(materialField.getText().trim());
             Integer sales = Integer.valueOf(salesField.getText().trim());
+            Integer count_have = Integer.valueOf(count_haveField.getText().trim());
+            Integer sold = Integer.valueOf(soldField.getText().trim());
 
             if (name.isEmpty()) {
                 alertInfo("Поле 'name' не может быть пустым!");
@@ -119,7 +131,9 @@ public class RowEditorRegisterController {
             prepared.setInt(3, supplier);
             prepared.setInt(4, material);
             prepared.setInt(5, sales);
-            prepared.setInt(6, Integer.parseInt(id));
+            prepared.setInt(6,count_have);
+            prepared.setInt(7,sold);
+            prepared.setInt(8, Integer.parseInt(id));
 
             int rowsUpdated = prepared.executeUpdate();
 
@@ -146,6 +160,8 @@ public class RowEditorRegisterController {
             materialField.setText(String.valueOf(registerData.getMaterial()));
             salesField.setText(String.valueOf(registerData.getSales()));
             supplierField.setText(String.valueOf(registerData.getSupplier()));
+            count_haveField.setText(String.valueOf(registerData.getcount_have()));
+            soldField.setText(String.valueOf(registerData.getSold()));
         }
     }
 

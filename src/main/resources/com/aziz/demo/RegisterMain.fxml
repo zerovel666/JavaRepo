@@ -45,12 +45,14 @@
         </MenuButton>
         <TableView fx:id="RegisterTable" layoutX="163.0" layoutY="54.0" prefHeight="297.0" prefWidth="420.0">
          <columns>
-            <TableColumn fx:id="registerID" prefWidth="75.0" text="ID" />
-            <TableColumn fx:id="registerName" prefWidth="75.0" text="name" />
-            <TableColumn fx:id="registerArticle" prefWidth="75.0" text="article" />
-            <TableColumn fx:id="registerSupplier" prefWidth="75.0" text="supplier" />
-            <TableColumn fx:id="registerMaterial" prefWidth="75.0" text="material" />
-            <TableColumn fx:id="registerSales" prefWidth="75.0" text="sales" />
+            <TableColumn fx:id="registerID" prefWidth="49.60003662109375" text="ID" />
+            <TableColumn fx:id="registerName" prefWidth="79.99993896484375" text="name" />
+            <TableColumn fx:id="registerArticle" prefWidth="75.199951171875" text="article" />
+            <TableColumn fx:id="registerSupplier" prefWidth="66.39996337890625" text="supplier" />
+            <TableColumn fx:id="registerMaterial" prefWidth="69.60003662109375" text="material" />
+            <TableColumn fx:id="registerSales" prefWidth="44.79998779296875" text="sales" />
+            <TableColumn fx:id="registerCountHave" prefWidth="44.79998779296875" text="count_have" />
+            <TableColumn fx:id="registerSold" prefWidth="44.79998779296875" text="sold" />
          </columns></TableView>
         <Button fx:id="deleteRowButton" layoutX="163.0" layoutY="364.0" mnemonicParsing="false" text="Удалить" />
         <Button fx:id="updateRowButton" layoutX="234.0" layoutY="364.0" mnemonicParsing="false" text="Редактировать" />

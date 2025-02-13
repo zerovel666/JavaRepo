@@ -5,7 +5,11 @@ import java.net.URL;
 import java.sql.*;
 import java.util.*;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,6 +25,36 @@ public class OperatorMainController {
 
     @FXML
     public Button mainButton;
+
+    @FXML
+    public TextField searchField;
+
+    @FXML
+    public Button searchButton;
+
+    @FXML
+    public TableColumn<Register,String> registerID;
+
+    @FXML
+    public TableColumn<Register,String> registerName;
+
+    @FXML
+    public TableColumn<Register,String> registerArticle;
+
+    @FXML
+    public TableColumn<Register,String> registerMaterial;
+
+    @FXML
+    public TableColumn<Register,String> registerSupplier;
+
+    @FXML
+    public TableColumn<Register,String> registerSales;
+
+    @FXML
+    public TableColumn<Register,String> registerCountHave;
+
+    @FXML
+    public TableColumn<Register,String> registerSold;
 
     @FXML
     private ResourceBundle resources;
@@ -59,7 +93,7 @@ public class OperatorMainController {
     private Button updateRowButton;
 
     @FXML
-    private TableView<Map<String, Object>> operatorTable;
+    private TableView<Register> operatorTable;
 
     @FXML
     private Button materialButton;
@@ -73,15 +107,105 @@ public class OperatorMainController {
         registerButton.setOnAction(event->loaderPage("/com/aziz/demo/RegisterMain.fxml"));
         materialButton.setOnAction(event->loaderPage("/com/aziz/demo/MaterialMain.fxml"));
         analyticsButton.setOnAction(event -> loaderPage("/com/aziz/demo/ChartAnalytics.fxml"));
+        searchButton.setOnAction(event -> search());
+        registerID.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getID()));
+        registerName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
+        registerArticle.setCellValueFactory(cellData -> new SimpleLongProperty(cellData.getValue().getArticle()).asObject().asString());
+        registerSupplier.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getSupplier()).asObject().asString());
+        registerMaterial.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getMaterial()).asObject().asString());
+        registerSales.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getSales()).asObject().asString());
+        registerCountHave.setCellValueFactory(cellData -> cellData.getValue().count_haveProperty().asObject().asString());
+        registerSold.setCellValueFactory(cellData -> cellData.getValue().soldProperty().asObject().asString());
+        setupSearchAutocomplete();
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                return;
+            }
+            String formattedText = newValue.substring(0, 1).toUpperCase() + newValue.substring(1);
+
+            if (!newValue.equals(formattedText)) {
+                searchField.setText(formattedText);
+                searchField.positionCaret(formattedText.length());
+            }
+        });
+
     }
 
-    private void alertError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Ошибка");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void search() {
+        String query = "SELECT * FROM register WHERE name = ?";
+
+        try (Connection dbConnection = DbConnection.connect_db();
+             PreparedStatement prepared = dbConnection.prepareStatement(query)) {
+
+            String name = searchField.getText().trim();
+            prepared.setString(1, name);
+
+            ObservableList<Register> data = FXCollections.observableArrayList();
+
+            try (ResultSet resultSet = prepared.executeQuery()) {
+                while (resultSet.next()) {
+                    Register register = new Register(
+                            String.valueOf(resultSet.getLong("id")),
+                            resultSet.getString("name"),
+                            resultSet.getLong("article"),
+                            Integer.parseInt(resultSet.getString("supplier")),
+                            Integer.parseInt(resultSet.getString("material")),
+                            Integer.parseInt(resultSet.getString("sales")),
+                            resultSet.getInt("count_have"),
+                            resultSet.getInt("sold")
+                    );
+                    data.add(register);
+                }
+            }
+            operatorTable.setItems(data);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    private void setupSearchAutocomplete() {
+        ContextMenu suggestions = new ContextMenu();
+
+        searchField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue.isEmpty()) {
+                suggestions.hide();
+                return;
+            }
+
+            ObservableList<MenuItem> items = FXCollections.observableArrayList();
+            String query = "SELECT DISTINCT name FROM register WHERE name LIKE ? LIMIT 5";
+
+            try (Connection dbConnection = DbConnection.connect_db();
+                 PreparedStatement prepared = dbConnection.prepareStatement(query)) {
+
+                prepared.setString(1, "%" + newValue + "%");
+                try (ResultSet resultSet = prepared.executeQuery()) {
+                    while (resultSet.next()) {
+                        String suggestion = resultSet.getString("name");
+                        MenuItem item = new MenuItem(suggestion);
+                        item.setOnAction(event -> {
+                            searchField.setText(suggestion);
+                            searchField.positionCaret(suggestion.length());
+                            suggestions.hide();
+                        });
+                        items.add(item);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            suggestions.getItems().setAll(items);
+            if (!items.isEmpty()) {
+                suggestions.show(searchField, searchField.localToScreen(0, searchField.getHeight()).getX(),
+                        searchField.localToScreen(0, searchField.getHeight()).getY());
+            } else {
+                suggestions.hide();
+            }
+        });
+    }
+
+
 
     private void loaderPage(String path) {
         try {
@@ -96,6 +220,14 @@ public class OperatorMainController {
             e.printStackTrace();
             alertError("Ошибка загрузки страницы");
         }
+    }
+
+    private void alertError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Ошибка");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 }

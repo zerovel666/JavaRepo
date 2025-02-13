@@ -23,10 +23,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 public class AnalyticsController {
@@ -45,6 +42,15 @@ public class AnalyticsController {
 
     @FXML
     public MenuItem filterByBestSelling;
+
+    @FXML
+    public DatePicker startDate;
+
+    @FXML
+    public DatePicker endDate;
+
+    @FXML
+    public Button mainButton;
 
     @FXML
     private ResourceBundle resources;
@@ -89,6 +95,9 @@ public class AnalyticsController {
 
     @FXML
     void initialize() {
+        startDate.setVisible(false);
+        endDate.setVisible(false);
+        mainButton.setOnAction(event -> loaderPage("/com/aziz/demo/OperatorMain.fxml"));
         countryButton.setOnAction(event -> loaderPage("/com/aziz/demo/CountryMain.fxml"));
         suppliersButton.setOnAction(event->loaderPage("/com/aziz/demo/SupplierMain.fxml"));
         staffButton.setOnAction(event->loaderPage("/com/aziz/demo/StaffMain.fxml"));
@@ -105,7 +114,20 @@ public class AnalyticsController {
 
     }
 
+    private void dateVisible(Boolean set){
+        startDate.setVisible(set);
+        endDate.setVisible(set);
+    }
+
+    private void nullValueDate()
+    {
+        startDate.setValue(null);
+        endDate.setValue(null);
+    }
+
     private void getFilterByCreatedAt() {
+        nullValueDate();
+        dateVisible(false);
         lastFilterMethod = this::getFilterByCreatedAt;
         Map<LocalDate, Integer> dataMap = new LinkedHashMap<>();
 
@@ -155,44 +177,72 @@ public class AnalyticsController {
     }
 
     private void getFilterByBestSelling() {
+        dateVisible(true);
         lastFilterMethod = this::getFilterByBestSelling;
-        Map<String, Integer> dataMap = new HashMap<>();
+        Map<String, Integer> dataMap = new LinkedHashMap<>();
 
-        String query = "SELECT name, SUM(sold) AS total_sold FROM register GROUP BY name ORDER BY total_sold DESC";
+        String query;
+        boolean hasDateFilter = startDate.getValue() != null && endDate.getValue() != null;
+
+        if (hasDateFilter) {
+            query = "SELECT name, SUM(sold) AS total_sold FROM register " +
+                    "WHERE time BETWEEN ? AND ? " +
+                    "GROUP BY name ORDER BY total_sold DESC";
+        } else {
+            query = "SELECT name, SUM(sold) AS total_sold FROM register " +
+                    "GROUP BY name ORDER BY total_sold DESC";
+        }
+
 
         try (Connection dbConnection = DbConnection.connect_db();
-             PreparedStatement prepared = dbConnection.prepareStatement(query);
-             ResultSet resultSet = prepared.executeQuery()) {
+             PreparedStatement prepared = dbConnection.prepareStatement(query)) {
 
-            while (resultSet.next()) {
-                String name = resultSet.getString("name");
-                int sold = resultSet.getInt("total_sold");
-                dataMap.put(name, sold);
+            if (hasDateFilter) {
+                prepared.setObject(1, startDate.getValue());
+                prepared.setObject(2, endDate.getValue());
             }
 
-            // Очищаем график и оси перед обновлением
-            lineChart.getData().clear();
-            xAxis.setCategories(FXCollections.observableArrayList()); // Полностью очищаем X-ось
-            yAxis.setAutoRanging(true);
+            try (ResultSet resultSet = prepared.executeQuery()) {
+                while (resultSet.next()) {
+                    String name = resultSet.getString("name");
+                    int sold = resultSet.getInt("total_sold");
+                    dataMap.put(name, sold);
+                }
+            }
+
 
             XYChart.Series<String, Number> series = new XYChart.Series<>();
             series.setName("Top Sold Products");
 
             ObservableList<String> categories = FXCollections.observableArrayList();
+
             for (Map.Entry<String, Integer> entry : dataMap.entrySet()) {
                 series.getData().add(new XYChart.Data<>(entry.getKey(), entry.getValue()));
                 categories.add(entry.getKey());
             }
 
-            Platform.runLater(() -> {
-                xAxis.setCategories(categories);
-                lineChart.getData().add(series);
-            });
+            lineChart.getData().clear();
+            lineChart.layout();
+            lineChart.getData().add(series);
+
+            int maxValue = dataMap.values().stream().max(Integer::compare).orElse(50);
+            yAxis.setTickUnit(1);
+            yAxis.setMinorTickCount(0);
+            yAxis.setForceZeroInRange(true);
+            yAxis.setAutoRanging(false);
+            yAxis.setLowerBound(0);
+            yAxis.setUpperBound(maxValue + 5);
+
+            CategoryAxis xAxis = (CategoryAxis) lineChart.getXAxis();
+            xAxis.setCategories(categories);
+            xAxis.setTickLabelRotation(45);
+            xAxis.setTickLabelGap(10);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
 
 
 

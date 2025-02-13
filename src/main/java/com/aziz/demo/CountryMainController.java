@@ -21,6 +21,10 @@ import javafx.stage.Stage;
 public class CountryMainController {
 
     public Button analyticsButton;
+
+    @FXML
+    public Button mainButton;
+
     @FXML
     private ResourceBundle resources;
 
@@ -82,6 +86,7 @@ public class CountryMainController {
             deleteRowButton.setDisable(newSelection == null);
             updateRowButton.setDisable(newSelection == null);
         });
+        mainButton.setOnAction(event -> loaderPage("/com/aziz/demo/OperatorMain.fxml",true,false,false));
         deleteRowButton.setOnAction(event -> deleteData());
         registerButton.setOnAction(event -> loadTableDataFromDB());
         updateRowButton.setOnAction(event -> loaderPage("/com/aziz/demo/RowEditorCountry.fxml", false, true,false));

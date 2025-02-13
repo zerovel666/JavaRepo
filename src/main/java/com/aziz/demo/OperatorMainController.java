@@ -16,7 +16,12 @@ import javafx.stage.Stage;
 
 public class OperatorMainController {
 
+    @FXML
     public Button analyticsButton;
+
+    @FXML
+    public Button mainButton;
+
     @FXML
     private ResourceBundle resources;
 

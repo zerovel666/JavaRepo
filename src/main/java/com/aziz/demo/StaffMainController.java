@@ -21,7 +21,13 @@ import javafx.stage.Stage;
 
 public class StaffMainController {
 
+
+    @FXML
     public Button analyticsButton;
+
+    @FXML
+    public Button mainButton;
+
     @FXML
     private ResourceBundle resources;
 
@@ -96,6 +102,7 @@ public class StaffMainController {
         registerButton.setOnAction(event->loaderPage("/com/aziz/demo/RegisterMain.fxml",true,false,false));
         materialButton.setOnAction(event -> loaderPage("/com/aziz/demo/MaterialMain.fxml",true,false,false));
         analyticsButton.setOnAction(event -> loaderPage("/com/aziz/demo/ChartAnalytics.fxml",true,false,false));
+        mainButton.setOnAction(event -> loaderPage("/com/aziz/demo/OperatorMain.fxml",true,false,false));
 
     }
 

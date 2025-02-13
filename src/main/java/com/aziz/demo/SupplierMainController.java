@@ -23,7 +23,12 @@ public class SupplierMainController {
 
     @FXML
     public Button staffButton;
+
+    @FXML
     public Button analyticsButton;
+
+    @FXML
+    public Button mainButton;
 
     @FXML
     private ResourceBundle resources;
@@ -100,6 +105,7 @@ public class SupplierMainController {
         registerButton.setOnAction(event->loaderPage("/com/aziz/demo/RegisterMain.fxml",true,false,false));
         materialButton.setOnAction(event->loaderPage("/com/aziz/demo/Material.fxml",true,false,false));
         analyticsButton.setOnAction(event -> loaderPage("/com/aziz/demo/ChartAnalytics.fxml",true,false,false));
+        mainButton.setOnAction(event -> loaderPage("/com/aziz/demo/OperatorMain.fxml",true,false,false));
 
     }
 

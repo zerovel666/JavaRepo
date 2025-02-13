@@ -32,6 +32,9 @@ public class RegisterMainController {
     public TableColumn<Register,Integer> registerSold;
 
     @FXML
+    public Button mainButton;
+
+    @FXML
     private ResourceBundle resources;
 
     @FXML
@@ -114,6 +117,7 @@ public class RegisterMainController {
         registerButton.setDisable(true);
         materialButton.setOnAction(event->loaderPage("/com/aziz/demo/MaterialMain.fxml",true,false,false));
         analyticsButton.setOnAction(event -> loaderPage("/com/aziz/demo/ChartAnalytics.fxml",true,false,false));
+        mainButton.setOnAction(event -> loaderPage("/com/aziz/demo/OperatorMain.fxml",true,false,false));
 
     }
 

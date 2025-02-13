@@ -24,12 +24,6 @@
                   <Font size="6.0" />
                </font>
             </Text>
-            <Button fx:id="registerButton" layoutX="15.0" layoutY="71.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Register" />
-            <Button fx:id="materialButton" layoutX="15.0" layoutY="108.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Material" />
-            <Button fx:id="staffButton" layoutX="15.0" layoutY="145.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Staff" />
-            <Button fx:id="suppliersButton" layoutX="15.0" layoutY="182.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Suppliers" />
-            <Button fx:id="countryButton" layoutX="15.0" layoutY="217.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Country" />
-            <Button fx:id="analyticsButton" layoutX="16.0" layoutY="255.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Analitics" />
          </children>
       </AnchorPane>
       <SplitMenuButton fx:id="sortButton" layoutX="506.0" layoutY="11.0" mnemonicParsing="false" text="Sort by">
@@ -52,5 +46,12 @@
       <Button fx:id="deleteRowButton" layoutX="163.0" layoutY="364.0" mnemonicParsing="false" text="Удалить" />
       <Button fx:id="updateRowButton" layoutX="234.0" layoutY="364.0" mnemonicParsing="false" text="Редактировать" />
       <Button fx:id="createButton" cache="true" layoutX="470.0" layoutY="12.0" mnemonicParsing="false" style="-fx-background-radius: 360;" text="+" />
+      <Button fx:id="registerButton" layoutX="15.0" layoutY="97.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Register" />
+      <Button fx:id="materialButton" layoutX="15.0" layoutY="134.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Material" />
+      <Button fx:id="staffButton" layoutX="15.0" layoutY="171.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Staff" />
+      <Button fx:id="suppliersButton" layoutX="15.0" layoutY="208.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Suppliers" />
+      <Button fx:id="countryButton" layoutX="15.0" layoutY="243.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Country" />
+      <Button fx:id="analyticsButton" layoutX="15.0" layoutY="277.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Analitics" />
+      <Button fx:id="mainButton" layoutX="16.0" layoutY="64.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Main" />
    </children>
 </AnchorPane>

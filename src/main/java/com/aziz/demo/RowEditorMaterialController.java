@@ -69,6 +69,7 @@ public class RowEditorMaterialController {
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
                 materialMainController.loadTableDataFromDB();
+                DbConnection.logs(query);
                 closeWindow();
             }
 
@@ -101,6 +102,7 @@ public class RowEditorMaterialController {
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");
                 materialMainController.loadTableDataFromDB();
+                DbConnection.logs(query);
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");

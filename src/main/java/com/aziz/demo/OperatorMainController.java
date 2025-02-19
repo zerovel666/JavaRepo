@@ -81,9 +81,6 @@ public class OperatorMainController {
     private Button registerButton;
 
     @FXML
-    private SplitMenuButton sortButton;
-
-    @FXML
     private Button staffButton;
 
     @FXML
@@ -156,6 +153,7 @@ public class OperatorMainController {
                     );
                     data.add(register);
                 }
+                DbConnection.logs(query);
             }
             operatorTable.setItems(data);
         } catch (SQLException e) {
@@ -189,6 +187,7 @@ public class OperatorMainController {
                             suggestions.hide();
                         });
                         items.add(item);
+                        DbConnection.logs(query);
                     }
                 }
             } catch (SQLException e) {
@@ -209,7 +208,7 @@ public class OperatorMainController {
 
     private void loaderPage(String path) {
         try {
-            Stage stage = (Stage) sortButton.getScene().getWindow();
+            Stage stage = (Stage) searchField.getScene().getWindow();
             stage.close();
             FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
             Parent root = loader.load();

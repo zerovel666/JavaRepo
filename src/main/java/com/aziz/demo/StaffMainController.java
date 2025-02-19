@@ -123,6 +123,7 @@ public class StaffMainController {
             prepared.setLong(1,Long.parseLong(id));
             prepared.execute();
             loadTableDataFromDB();
+            DbConnection.logs(query);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -145,7 +146,7 @@ public class StaffMainController {
 
                 data.add(new Staff(id, full_name,date_employement));
             }
-
+            DbConnection.logs(query);
             staffTable.setItems(data);
 
         } catch (SQLException e) {

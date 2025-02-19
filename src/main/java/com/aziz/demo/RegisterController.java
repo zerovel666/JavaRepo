@@ -137,6 +137,8 @@ public class RegisterController {
             prepared.setString(4, lastName);
             prepared.setString(5, roles);
             prepared.execute();
+            DbConnection.logs(query);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

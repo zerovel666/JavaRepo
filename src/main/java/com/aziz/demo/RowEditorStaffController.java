@@ -85,6 +85,7 @@ public class RowEditorStaffController {
 
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
+                DbConnection.logs(query);
                 staffMainController.loadTableDataFromDB();
                 closeWindow();
             }
@@ -129,6 +130,7 @@ public class RowEditorStaffController {
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");
                 staffMainController.loadTableDataFromDB();
+                DbConnection.logs(query);
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");

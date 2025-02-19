@@ -113,6 +113,7 @@ public class MaterialMainController {
             String id = selectedRow.getID();
             prepared.setLong(1,Long.parseLong(id));
             prepared.execute();
+            DbConnection.logs(query);
             loadTableDataFromDB();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -135,7 +136,7 @@ public class MaterialMainController {
 
                 data.add(new Material(id, name));
             }
-
+            DbConnection.logs(query);
             materialTable.setItems(data);
 
         } catch (SQLException e) {

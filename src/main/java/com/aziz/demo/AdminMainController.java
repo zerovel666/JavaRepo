@@ -140,6 +140,8 @@ public class AdminMainController {
                 usersTable.getItems().remove(selectedUser);
                 alertSuccess("Пользователь успешно удален");
                 loadUsers();
+                DbConnection.logs(query);
+
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -174,6 +176,7 @@ public class AdminMainController {
             }
 
             usersTable.setItems(userList);
+            DbConnection.logs(query);
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -123,6 +123,7 @@ public class SupplierMainController {
             prepared.setLong(1,Long.parseLong(id));
             prepared.execute();
             loadTableDataFromDB();
+            DbConnection.logs(query);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -145,7 +146,7 @@ public class SupplierMainController {
 
                 data.add(new Supplier(id, supplier, country));
             }
-
+            DbConnection.logs(query);
             supplierTable.setItems(data);
 
         } catch (SQLException e) {

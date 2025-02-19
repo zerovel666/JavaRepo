@@ -96,6 +96,7 @@ public class RowEditorRegisterController {
             int rowsInserted = prepared.executeUpdate();
 
             if (rowsInserted > 0) {
+                DbConnection.logs(query);
                 alertSuccess("Данные успешно добавлены!");
                 registerMainController.loadTableDataFromDB();
                 closeWindow();
@@ -140,6 +141,7 @@ public class RowEditorRegisterController {
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");
                 registerMainController.loadTableDataFromDB();
+                DbConnection.logs(query);
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");

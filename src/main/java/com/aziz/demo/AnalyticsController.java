@@ -170,6 +170,7 @@ public class AnalyticsController {
             xAxis.setCategories(categories);
             xAxis.setTickLabelRotation(45);
             xAxis.setTickLabelGap(10);
+            DbConnection.logs(query);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -237,6 +238,7 @@ public class AnalyticsController {
             xAxis.setCategories(categories);
             xAxis.setTickLabelRotation(45);
             xAxis.setTickLabelGap(10);
+            DbConnection.logs(query);
 
         } catch (SQLException e) {
             e.printStackTrace();

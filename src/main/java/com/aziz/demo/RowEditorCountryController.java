@@ -68,6 +68,7 @@ public class RowEditorCountryController {
 
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
+                DbConnection.logs(query);
                 countryMainController.loadTableDataFromDB();
                 closeWindow();
             }
@@ -101,6 +102,7 @@ public class RowEditorCountryController {
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");
                 countryMainController.loadTableDataFromDB();
+                DbConnection.logs(query);
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");

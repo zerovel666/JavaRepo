@@ -140,6 +140,7 @@ public class RegisterMainController {
             prepared.setLong(1,Long.parseLong(id));
             prepared.execute();
             loadTableDataFromDB();
+            DbConnection.logs(query);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -167,7 +168,7 @@ public class RegisterMainController {
 
                 data.add(new Register(id, name, article, material, sales, supplier, count_have, sold));
             }
-
+            DbConnection.logs(query);
             RegisterTable.setItems(data);
 
         } catch (SQLException e) {

@@ -112,6 +112,8 @@ public class CountryMainController {
             prepared.setLong(1,Long.parseLong(id));
             prepared.execute();
             loadTableDataFromDB();
+            DbConnection.logs(query);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -133,6 +135,7 @@ public class CountryMainController {
 
                 data.add(new Country(id, country));
             }
+            DbConnection.logs(query);
 
             countryTable.setItems(data);
 

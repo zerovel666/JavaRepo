@@ -85,6 +85,9 @@ public class RowEditorController {
                     int rowsAffected = updateStatement.executeUpdate();
 
                     if (rowsAffected > 0) {
+                        DbConnection.logs(querySelect);
+                        DbConnection.logs(queryUpdate);
+
                         alertInfo("Данные пользователя успешно обновлены, обновите страничку!");
                         Stage stage = (Stage) saveButton.getScene().getWindow();
                         stage.close();

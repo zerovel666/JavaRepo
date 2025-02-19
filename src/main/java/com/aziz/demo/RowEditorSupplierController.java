@@ -75,6 +75,7 @@ public class RowEditorSupplierController {
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
                 supplierMainController.loadTableDataFromDB();
+                DbConnection.logs(query);
                 closeWindow();
             }
 
@@ -109,6 +110,7 @@ public class RowEditorSupplierController {
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");
                 supplierMainController.loadTableDataFromDB();
+                DbConnection.logs(query);
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");

@@ -1,0 +1,111 @@
+package com.aziz.demo;
+
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.ResourceBundle;
+
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitMenuButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+
+public class LogsMainController {
+
+    @FXML
+    private ResourceBundle resources;
+
+    @FXML
+    private URL location;
+
+    @FXML
+    private TableColumn<Logs, String> actionColumn;
+
+    @FXML
+    private TableColumn<Logs, String> dateColumn;
+
+    @FXML
+    private TableColumn<Logs, Integer> entryIdColumn;
+
+    @FXML
+    private MenuItem exitAction;
+
+    @FXML
+    private TableColumn<Logs, String> idColumn;
+
+    @FXML
+    private Button logsButton;
+
+    @FXML
+    private MenuButton menuButton;
+
+    @FXML
+    private TableColumn<Logs, String> methodColumn;
+
+    @FXML
+    private MenuItem renderOperationAction;
+
+    @FXML
+    private MenuItem renderUserAction;
+
+    @FXML
+    private SplitMenuButton sortButton;
+
+    @FXML
+    private Button usersButton;
+
+    @FXML
+    private TableView<Logs> logsTable;
+
+    @FXML
+    void initialize() {
+        setupTableColumns();
+        loadTableDataFromDB();
+    }
+
+    private void setupTableColumns() {
+        idColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getId()));
+        methodColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMethod()));
+        actionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAction()));
+        entryIdColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getEntryId()).asObject());
+        dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDateFormated()));
+    }
+
+    public void loadTableDataFromDB() {
+        ObservableList<Logs> data = FXCollections.observableArrayList();
+
+        String query = "SELECT id, method, action, entry_id, date FROM logs"; // Используй правильную таблицу
+
+        try (Connection dbConnection = DbConnection.connect_db();
+             PreparedStatement prepared = dbConnection.prepareStatement(query);
+             ResultSet resultSet = prepared.executeQuery()) {
+
+            while (resultSet.next()) {
+                String id = resultSet.getString("id");
+                String method = resultSet.getString("method");
+                String action = resultSet.getString("action");
+                int entryId = resultSet.getInt("entry_id");
+                Date date = resultSet.getTimestamp("date");
+
+                data.add(new Logs(id, method, action, entryId, date));
+            }
+            DbConnection.logs(query);
+
+            logsTable.setItems(data);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+}

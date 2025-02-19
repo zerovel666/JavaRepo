@@ -25,6 +25,7 @@
                </font>
             </Text>
             <Button fx:id="usersButton" layoutX="13.0" layoutY="58.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Users" />
+            <Button fx:id="logsButton" layoutX="13.0" layoutY="94.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="116.0" text="Logs" />
          </children>
       </AnchorPane>
       <SplitMenuButton fx:id="sortButton" layoutX="506.0" layoutY="11.0" mnemonicParsing="false" text="Sort by">

@@ -90,6 +90,8 @@ public class AdminMainController {
     @FXML
     private Button updateRowButton;
 
+    @FXML
+    private Button logsButton;
 
     @FXML
     void initialize() {
@@ -126,6 +128,8 @@ public class AdminMainController {
         createButton.setOnAction(event -> {
             loaderPage("/com/aziz/demo/Register.fxml",false,false);
         });
+
+        logsButton.setOnAction(event -> loaderPage("/com/aziz/demo/LogsMain.fxml",true,false));
     }
 
     private void deleteUser() {

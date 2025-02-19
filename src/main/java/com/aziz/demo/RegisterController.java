@@ -137,7 +137,9 @@ public class RegisterController {
             prepared.setString(4, lastName);
             prepared.setString(5, roles);
             prepared.execute();
-            DbConnection.logs(query);
+            String finalQuery = query.replace("?", "%s").formatted(username, password, firstName, lastName, roles);
+            DbConnection.logs(finalQuery);
+
 
         } catch (SQLException e) {
             e.printStackTrace();

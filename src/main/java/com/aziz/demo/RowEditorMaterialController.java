@@ -69,7 +69,13 @@ public class RowEditorMaterialController {
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
                 materialMainController.loadTableDataFromDB();
-                DbConnection.logs(query);
+                String finalQuery = String.format(
+                        "INSERT INTO material (name) VALUES ('%s')",
+                        material
+                );
+
+                DbConnection.logs(finalQuery);
+
                 closeWindow();
             }
 
@@ -102,7 +108,12 @@ public class RowEditorMaterialController {
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");
                 materialMainController.loadTableDataFromDB();
-                DbConnection.logs(query);
+                String finalQuery = String.format(
+                        "UPDATE material SET name = '%s' WHERE id = %s",
+                        material, id
+                );
+
+                DbConnection.logs(finalQuery);
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");

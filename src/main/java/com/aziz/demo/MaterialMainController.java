@@ -113,6 +113,7 @@ public class MaterialMainController {
             String id = selectedRow.getID();
             prepared.setLong(1,Long.parseLong(id));
             prepared.execute();
+            String finalQuery = query.replace("?", "'%s'").formatted(id);
             DbConnection.logs(query);
             loadTableDataFromDB();
         } catch (SQLException e) {

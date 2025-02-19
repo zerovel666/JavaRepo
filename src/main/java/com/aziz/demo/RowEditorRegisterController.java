@@ -96,7 +96,11 @@ public class RowEditorRegisterController {
             int rowsInserted = prepared.executeUpdate();
 
             if (rowsInserted > 0) {
-                DbConnection.logs(query);
+                String finalQuery = String.format(
+                        "INSERT INTO register (name, article, supplier, material, sales, count_have, sold) VALUES ('%s', %d, %d, %d, %d, %d, %d)",
+                        name, article, supplier, material, sales, count_have, sold
+                );
+                DbConnection.logs(finalQuery);
                 alertSuccess("Данные успешно добавлены!");
                 registerMainController.loadTableDataFromDB();
                 closeWindow();
@@ -141,7 +145,11 @@ public class RowEditorRegisterController {
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");
                 registerMainController.loadTableDataFromDB();
-                DbConnection.logs(query);
+                String finalQuery = String.format(
+                        "UPDATE register SET name = '%s', article = %d, supplier = %d, material = %d, sales = %d, count_have = %d, sold = %d WHERE id = %d",
+                        name, article, supplier, material, sales, count_have, sold, Integer.parseInt(id)
+                );
+                DbConnection.logs(finalQuery);
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");

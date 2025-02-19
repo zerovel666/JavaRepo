@@ -112,7 +112,8 @@ public class CountryMainController {
             prepared.setLong(1,Long.parseLong(id));
             prepared.execute();
             loadTableDataFromDB();
-            DbConnection.logs(query);
+            String finalQuery = query.replace("?", "'%s'").formatted(id);
+            DbConnection.logs(finalQuery);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

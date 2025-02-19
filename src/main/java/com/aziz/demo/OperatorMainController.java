@@ -153,7 +153,9 @@ public class OperatorMainController {
                     );
                     data.add(register);
                 }
-                DbConnection.logs(query);
+                String finalQuery = query.replace("?", "'%s'").formatted(name);
+                DbConnection.logs(finalQuery);
+
             }
             operatorTable.setItems(data);
         } catch (SQLException e) {
@@ -187,7 +189,8 @@ public class OperatorMainController {
                             suggestions.hide();
                         });
                         items.add(item);
-                        DbConnection.logs(query);
+                        String finalQuery = query.replace("?", "'%s'").formatted(suggestion);
+                        DbConnection.logs(finalQuery);
                     }
                 }
             } catch (SQLException e) {

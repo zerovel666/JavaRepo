@@ -75,7 +75,11 @@ public class RowEditorSupplierController {
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
                 supplierMainController.loadTableDataFromDB();
-                DbConnection.logs(query);
+
+                String finalQuery = query.replaceFirst("\\?", "'" + supplier + "'")
+                        .replaceFirst("\\?", "'" + country + "'");
+
+                DbConnection.logs(finalQuery);
                 closeWindow();
             }
 
@@ -84,6 +88,7 @@ public class RowEditorSupplierController {
             alertError("Ошибка базы данных.");
         }
     }
+
 
 
     private void update() {
@@ -100,17 +105,27 @@ public class RowEditorSupplierController {
                 return;
             }
 
+            // Сохраняем ID перед очисткой
+            String idCopy = id;
+            int idValue = Integer.parseInt(idCopy);
+
             prepared.setString(1, supplier);
             prepared.setString(2, country);
-            prepared.setInt(3, Integer.parseInt(id));
+            prepared.setInt(3, idValue);
 
             int rowsUpdated = prepared.executeUpdate();
-            id = null;
+            id = null; // Очищаем после успешного выполнения запроса
 
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");
                 supplierMainController.loadTableDataFromDB();
-                DbConnection.logs(query);
+
+                // Подставляем значения в логируемый запрос
+                String finalQuery = query.replaceFirst("\\?", "'" + supplier + "'")
+                        .replaceFirst("\\?", "'" + country + "'")
+                        .replaceFirst("\\?", String.valueOf(idValue));
+
+                DbConnection.logs(finalQuery);
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");
@@ -122,6 +137,7 @@ public class RowEditorSupplierController {
             alertError("Ошибка базы данных.");
         }
     }
+
 
     private void closeWindow() {
         Stage stage = (Stage) supplierField.getScene().getWindow();

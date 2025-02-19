@@ -68,7 +68,12 @@ public class RowEditorCountryController {
 
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
-                DbConnection.logs(query);
+                String finalQuery = String.format(
+                        "INSERT INTO country (country) VALUES ('%s')",
+                        country
+                );
+
+                DbConnection.logs(finalQuery);
                 countryMainController.loadTableDataFromDB();
                 closeWindow();
             }
@@ -102,7 +107,13 @@ public class RowEditorCountryController {
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");
                 countryMainController.loadTableDataFromDB();
-                DbConnection.logs(query);
+                String finalQuery = String.format(
+                        "UPDATE country SET country = '%s' WHERE id = %d",
+                        country, Integer.parseInt(id)
+                );
+
+                DbConnection.logs(finalQuery);
+
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");

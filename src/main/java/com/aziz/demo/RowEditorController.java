@@ -83,10 +83,12 @@ public class RowEditorController {
                     updateStatement.setInt(5, id);
 
                     int rowsAffected = updateStatement.executeUpdate();
-
+                    String finalQuery = queryUpdate.replace("?", "%s").formatted(username, firstName, lastName, password, id);
+                    DbConnection.logs(finalQuery);
+                    String finalSelectQuery = querySelect.replace("?", "%s").formatted(id);
+                    DbConnection.logs(finalSelectQuery);
                     if (rowsAffected > 0) {
                         DbConnection.logs(querySelect);
-                        DbConnection.logs(queryUpdate);
 
                         alertInfo("Данные пользователя успешно обновлены, обновите страничку!");
                         Stage stage = (Stage) saveButton.getScene().getWindow();

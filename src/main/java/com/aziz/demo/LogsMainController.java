@@ -1,5 +1,6 @@
 package com.aziz.demo;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,12 +14,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 public class LogsMainController {
 
@@ -71,6 +71,9 @@ public class LogsMainController {
     void initialize() {
         setupTableColumns();
         loadTableDataFromDB();
+        usersButton.setOnAction(event -> loaderPage("/com/aziz/demo/AdminMain.fxml"));
+        renderOperationAction.setOnAction(event -> loaderPage("/com/aziz/demo/OperatorMain.fxml"));
+
     }
 
     private void setupTableColumns() {
@@ -106,6 +109,28 @@ public class LogsMainController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    private void loaderPage(String path) {
+        try {
+            Stage stage = (Stage) sortButton.getScene().getWindow();
+            stage.close();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+            Parent root = loader.load();
+
+            Stage newStage = new Stage();
+            newStage.setScene(new Scene(root));
+            newStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            alertError("Ошибка загрузки страницы");
+        }
+    }
+    private void alertError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Ошибка");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 }

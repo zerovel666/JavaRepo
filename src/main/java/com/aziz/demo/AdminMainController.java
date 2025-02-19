@@ -44,24 +44,9 @@ public class AdminMainController {
     @FXML
     private MenuItem renderUserAction;
 
-    @FXML
-    private Button countryButton;
-
-
-    @FXML
-    private Button materialButton;
-
-    @FXML
-    private Button registerButton;
 
     @FXML
     private SplitMenuButton sortButton;
-
-    @FXML
-    private Button staffButton;
-
-    @FXML
-    private Button suppliersButton;
 
     @FXML
     private TableColumn<User, String> firstNameColumn;
@@ -130,6 +115,7 @@ public class AdminMainController {
         });
 
         logsButton.setOnAction(event -> loaderPage("/com/aziz/demo/LogsMain.fxml",true,false));
+        renderOperationAction.setOnAction(event -> loaderPage("/com/aziz/demo/OperatorMain.fxml",true,false));
     }
 
     private void deleteUser() {

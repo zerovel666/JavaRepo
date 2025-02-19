@@ -85,7 +85,13 @@ public class RowEditorStaffController {
 
             if (rowsInserted > 0) {
                 alertSuccess("Данные успешно добавлены!");
-                DbConnection.logs(query);
+                String finalQuery = String.format(
+                        "INSERT INTO staff (full_name, date_employement) VALUES ('%s', '%s')",
+                        full_name, dateString
+                );
+
+                DbConnection.logs(finalQuery);
+
                 staffMainController.loadTableDataFromDB();
                 closeWindow();
             }
@@ -130,7 +136,11 @@ public class RowEditorStaffController {
             if (rowsUpdated > 0) {
                 alertSuccess("Данные успешно обновлены!");
                 staffMainController.loadTableDataFromDB();
-                DbConnection.logs(query);
+                String finalQuery = String.format(
+                        "UPDATE staff SET full_name = '%s', date_employement = '%s' WHERE id = %s",
+                        full_name, dateString, id
+                );
+                DbConnection.logs(finalQuery);
                 closeWindow();
             } else {
                 alertError("Не удалось обновить данные.");

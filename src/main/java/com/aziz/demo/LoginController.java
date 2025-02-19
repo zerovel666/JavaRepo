@@ -71,7 +71,8 @@ public class LoginController {
                 if (resultSet.next()) {
                     String storedHash = resultSet.getString("password");
                     String role = resultSet.getString("roles");
-                    DbConnection.logs(query);
+                    String finalQuery = query.replace("?", "'%s'").formatted(login);
+                    DbConnection.logs(finalQuery);
 
                     if (BCrypt.checkpw(password, storedHash)) {
                         return role;
